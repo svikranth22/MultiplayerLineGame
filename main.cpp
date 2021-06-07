@@ -1,20 +1,15 @@
 #include <SFML/Graphics.hpp>
-#include <SFML/Network.hpp>
 #include "objects.hpp"
+#include <iostream>
 using namespace objects;
 
 int main() {
     sf:: RenderWindow window(sf::VideoMode(DIM*SQUARES, DIM*SQUARES), "main window");
+    window.setVerticalSyncEnabled(true);
     Board board;
     board.makeSpaces();
-    Player player1(sf::Color::Blue,0,0,Right,board);
-    
-    sf::UdpSocket socket;
-    socket.bind(54000);
-    char data[10] = "hello"
-    sf::IpAddress recipient = "192.168.1.221";
-    unsigned short port = 54000;
-    socket.send(data, 10 , recipient, port);
+    Player1 player1(sf::Color::Blue,53,35,Left,board);
+    Player2 player2(sf::Color::Red,17,35,Right,board);
     
     while(window.isOpen()) {
         sf::Event event;
@@ -24,15 +19,16 @@ int main() {
             }
             if(event.type == sf::Event::KeyPressed) {
                 player1.changeDir(event);
+                player2.changeDir(event);
             }
         }
         window.clear(sf::Color::Black);
         board.drawSpaces(window);
-        if(gameover == false) {
-            player1.move();
-        }
+        player1.updateGame();
+        player2.updateGame();
         window.display();
     }
 }
+
 
 
